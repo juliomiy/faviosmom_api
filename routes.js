@@ -6,8 +6,8 @@ var order = require('./models/order');
 
 module.exports = {
   configure: function(app) {
-    app.get('/v1/menu/', function(req, res) {
-      menu.get(res);
+    app.get('/v1/menu/:type?', function(req, res) {
+      menu.get(req, res);
     });
 
     app.get('/v1/menuitems/:category?', function(req, res) {

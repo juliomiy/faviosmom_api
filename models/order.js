@@ -21,16 +21,17 @@ Order Field is stored as json in a json field of the order table
  */
 function Order() {
     this.post = function (req, res) {
-        var sql, order, total_order_price, orderID;
+        var sql, order, total_order_price = 0, orderID;
         console.log(JSON.stringify(req));
         connection.acquire(function (err, con) {
             if (null !== req['order'] && req['order']) {
                 order = req['order'];
+                //calculate total order price
+                for (var i=0; i<order.length;i++) {
+                    total_order_price += order[i].portions * order[i].price;
+                }
             }
-          //  if (null !== req['payload']['total_order_price'] && req['payload']['total_order_price']) {
-            total_order_price = req['total_order_price'];
-           // }
-           // total_order_price = 50;
+            //total_order_price = req['total_order_price'];
             orderID = Math.floor(Date.now());
             sql = SqlString.format("insert into faviosmom.order (`order`,`total_order_price`,`orderID`) values (?,?,?)",[JSON.stringify(order),total_order_price,orderID]);
             utility.log('info', 'Order API', {
