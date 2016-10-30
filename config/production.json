@@ -1,0 +1,15 @@
+{
+  "Faviosmom": {
+    "dbConfig": {
+      "host": "rds-faviosmom.chogbxcyklwp.us-east-1.rds.amazonaws.com",
+      "port": 3306,
+      "dbName": "faviosmom",
+      "user": "julio",
+      "password": "Yankees5a",
+      "connectionLimit": 100
+    },
+    "webConfig": {
+      "port": "8000"
+    }
+  }
+}

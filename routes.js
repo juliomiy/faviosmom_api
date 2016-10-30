@@ -3,6 +3,7 @@
 var menuItem = require('./models/menu_item');
 var menu = require('./models/menu');
 var order = require('./models/order');
+var businessDetail = require('./models/business_detail');
 
 module.exports = {
   configure: function(app) {
@@ -25,6 +26,10 @@ module.exports = {
    app.get('/v1/menuitem/:menuitem', function(req,res) {
       menuItem.getMenuItem(req,res);
    });
+
+   app.get('/v1/businessdetail/', function(req,res) {
+          businessDetail.location(req,res);
+    });
 
     app.post('/v1/order/', function (req, res) {
       console.log(req.toString());
