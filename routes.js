@@ -15,9 +15,6 @@ module.exports = {
           menuItem.get(req, res);
     });
 
-   app.get('/v1/menuitems/:category?', function(req, res) {
-      menuItem.get(req, res);
-    });
 
    app.get('/v1/menuitem/:menuitemid(\\d+)', function(req,res) {
           menuItem.getMenuItem(req,res);

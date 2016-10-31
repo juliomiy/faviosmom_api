@@ -11,12 +11,13 @@ function MenuItems() {
         var sql;
         console.log(req.params);
         connection.acquire(function (err, con) {
-            if (category == null) {
+            if (!category) {
                 sql = SqlString.format('select mi.* from menu_items mi, menu m where mi.menu_id = m.id');
             } else if (category == "vegetarian") {
                 sql = SqlString.format('select mi.* from menu_items mi where mi.vegetarian = 1');
             } else {
-                sql = SqlString.format('select * from menu_items where menu_id = (select id from menu where normalized_name = ?)', [category]);
+                var normalized_name = category.toLowerCase().replace(/\s/g,'');
+                sql = SqlString.format('select * from menu_items where menu_id = (select id from menu where normalized_name = ?)', [normalized_name]);
             }
             utility.log('info', 'MenuItems API',
                 {
@@ -60,6 +61,7 @@ function MenuItems() {
             if (menuItemID) {
                 sql = SqlString.format('select id,menu_id,portion_size,name, price,normalized_name,vegetarian from menu_items where id = ? LIMIT 1', [menuItemID]);
             } else {
+                normalizedMenuItem = normalizedMenuItem.toLowerCase().replace(/\s/g,'');
                 sql = SqlString.format('select id,menu_id,portion_size,name, price,normalized_name,vegetarian from menu_items where normalized_name = ? LIMIT 1', [normalizedMenuItem]);
             }
             utility.log('info', 'MenuItem API',
