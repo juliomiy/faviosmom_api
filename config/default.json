@@ -1,11 +1,11 @@
 {
   "Faviosmom": {
     "dbConfig": {
-      "host": "localhost",
+      "host": "146.148.100.114",
       "port": 3306,
       "dbName": "faviosmom",
       "user": "root",
-      "password": "",
+      "password": "Yankees5a",
       "connectionLimit": 100
     },
     "webConfig": {

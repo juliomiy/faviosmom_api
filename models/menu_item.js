@@ -48,9 +48,14 @@ function MenuItems() {
     }
     this.insertMenuItem = function (req,res) {
         var sql;
+        var API = {"name":"menuitems", "type":"post"};
         var new_menuItem = req['newMenuItem'];
         var response = {};
-        console.log(new_menuItem);
+
+        if (!new_menuItem) {
+            res.send(utility.formatErrorResponse(API));
+            return;
+        }
         connection.acquire(function (err, con) {
 
             sql = `insert into menu_items (menu_id,name, normalized_name,portion_size, price, available) \
@@ -58,7 +63,7 @@ function MenuItems() {
             sql = SqlString.format(sql,[new_menuItem.menu_id, new_menuItem.name,utility.normalize(new_menuItem.name),new_menuItem.portion_size,new_menuItem.price,new_menuItem.available]);
             con.query(sql, function (err, result) {
                 con.release();
-                response = utility.formatSqlResponse('menuitems POST',err,result);
+                response = utility.formatSqlResponse(API.name + API.type,err,result);
                 res.send(response);
             });
         });

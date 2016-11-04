@@ -36,7 +36,15 @@ function Utility() {
 
           return response;
       }
-
+      this.formatErrorResponse = function(API) {
+        var response = {
+            'statuscode': 500,
+            'rows': 0,
+            'api': API.name + " " + API.type,
+            'result': {}
+        };
+        return response;
+     }
       this.normalize = function(str) {
           return str.replace(/[\W_+\d]/g, "");
       }
