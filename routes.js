@@ -33,7 +33,7 @@ module.exports = {
    });
 
    app.delete('/v1/menuitem/', function (req,res) {
-       menuItem.deleteMenuItem(req,res);
+       menuItem.deleteMenuItem(req.body,res);
 
    });
 

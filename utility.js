@@ -22,18 +22,32 @@ function Utility() {
           var response = {
               'statuscode': 200,
               'rows': 0,
-              'api': api,
+              'api': api.name + " " + api.type,
               'result': {}
           };
 
           if (!err) {
-              response['rows'] = result.affectedRows;
-              response['result'] = JSON.parse( '{"id" :' + result.insertId + '}' );
+              var rows = 0;
+
+              switch (api.type) {
+
+                  case "post":
+                      response['result'] = JSON.parse( '{"id" :' + result.insertId + '}' );
+                  case "put":
+                  case "delete":
+
+                  default:
+                    response['rows'] = result.affectedRows;
+                    break;
+                  case "get":
+                      response['rows'] = result.length;
+                      response['result'] = result;
+                      break;
+              }
           } else {
               response['statuscode'] = 500;
               response['result'] = err;
-          }
-
+          }console.log(response);
           return response;
       }
       this.formatErrorResponse = function(API) {

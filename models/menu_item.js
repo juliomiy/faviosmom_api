@@ -9,7 +9,9 @@ function MenuItems() {
     this.get = function (req, res) {
         var category = req.params['category'];
         var sql;
-        console.log(req.params);
+        var API = {"name":"menuitems", "type":"get"};
+        var response = {};
+
         connection.acquire(function (err, con) {
             if (!category) {
                 sql = SqlString.format('select mi.* from menu_items mi, menu m where mi.menu_id = m.id');
@@ -25,27 +27,17 @@ function MenuItems() {
                 });
 
             con.query(sql, function (err, result) {
-                var response = {
-                    'statuscode': 200,
-                    'rows': 0,
-                    'api': 'menuitems',
-                    'result': null
-                };
                 con.release();
-                if (!err) {
-                    response['rows'] = result.length;
-                    response['result'] = result;
-                } else {
-                    response['statuscode'] = 500;
-                }
+                response = utility.formatSqlResponse(API,err,result);
                 utility.log('info', 'MenuItems API',
-                    {
-                        "response": response
-                    });
+                {
+                    "response": response
+                });
                 res.send(response);
             });
         });
     }
+
     this.insertMenuItem = function (req,res) {
         var sql;
         var API = {"name":"menuitems", "type":"post"};
@@ -63,7 +55,7 @@ function MenuItems() {
             sql = SqlString.format(sql,[new_menuItem.menu_id, new_menuItem.name,utility.normalize(new_menuItem.name),new_menuItem.portion_size,new_menuItem.price,new_menuItem.available]);
             con.query(sql, function (err, result) {
                 con.release();
-                response = utility.formatSqlResponse(API.name + API.type,err,result);
+                response = utility.formatSqlResponse(API,err,result);
                 res.send(response);
             });
         });
@@ -75,8 +67,29 @@ function MenuItems() {
     }
 
     this.deleteMenuItem = function(req,res) {
+        var sql;
+        var API = {"name":"menuitems", "type":"delete"};
+        var menuItemID = req['menuitemid'];
+        var response = {};
+        if (!menuItemID) {
+            res.send(utility.formatErrorResponse(API));
+            return;
+        }
+        connection.acquire(function (err, con) {
+            sql = "delete from menu_items where id = ? LIMIT 1";
+            sql = SqlString.format(sql,[menuItemID]);
+            utility.log('info', 'MenuItem API',
+                {
+                    "sql": sql
+                });
+            con.query(sql, function (err, result) {
+                con.release();
+                response = utility.formatSqlResponse(API,err,result);
+                res.send(response);
+            });
+        });
 
-    }
+        }
     /*
     Get individual Menu item from the menu_items table using either normalized name or menu_id (integer)
     responds with json record containing the details of the menu item

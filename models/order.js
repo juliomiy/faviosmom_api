@@ -22,6 +22,10 @@ Order Field is stored as json in a json field of the order table
 function Order() {
     this.post = function (req, res) {
         var sql, order, total_order_price = 0, orderID;
+        var API = {"name": "order",
+                   "type": "post"};
+        var response = {};
+
         console.log(JSON.stringify(req));
         connection.acquire(function (err, con) {
             if (null !== req['order'] && req['order']) {
@@ -39,23 +43,9 @@ function Order() {
                 "sql": sql
             });
             con.query(sql, function(err, result) {
-                var response = {"statuscode": 200,
-                    "rows": 0,
-                    "api": 'order',
-                    "result": {
-                        "orderID": orderID,
-                        "total_order_price": total_order_price
-                    }
-                };
                 con.release();
-                if (!err) {
-                    response['rows'] = 1;
-                    response['result']['orderID'] = orderID;
-                    //response['result'] = result;
-                } else {
-                    response['statuscode'] = 500;
-                    response['result'] = null;
-                }
+                response = utility.formatSqlResponse(API,err,result);
+                response['result']['orderID'] = orderID;
                 utility.log('info', 'Order API', {
                     "response": response
                 });
