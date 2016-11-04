@@ -24,6 +24,19 @@ module.exports = {
       menuItem.getMenuItem(req,res);
    });
 
+   app.post('/v1/menuitem/', function (req,res) {
+       menuItem.insertMenuItem(req.body,res);
+   });
+
+   app.put('/v1/menuitem/', function (req,res) {
+       menuItem.updateMenuItem(req,res);
+   });
+
+   app.delete('/v1/menuitem/', function (req,res) {
+       menuItem.deleteMenuItem(req,res);
+
+   });
+
    app.get('/v1/businessdetail/', function(req,res) {
           businessDetail.location(req,res);
     });

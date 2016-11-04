@@ -32,6 +32,7 @@ function Order() {
                 }
             }
             //total_order_price = req['total_order_price'];
+            //TODO Create method to create Order ID which is returned back to the invoker of the
             orderID = Math.floor(Date.now());
             sql = SqlString.format("insert into faviosmom.order (`order`,`total_order_price`,`orderID`) values (?,?,?)",[JSON.stringify(order),total_order_price,orderID]);
             utility.log('info', 'Order API', {
