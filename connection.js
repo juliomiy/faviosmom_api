@@ -15,7 +15,8 @@ function Connection() {
       host: this.dbHost,
       user: this.user,
       password: this.password,
-      database: this.dbName
+      database: this.dbName,
+      multipleStatements: true
     });
   };
  

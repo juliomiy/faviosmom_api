@@ -98,16 +98,21 @@ function MenuItems() {
      */
     this.getMenuItem = function(req,res) {
         var sql;
+        var API = {"name":"menuitem", "type":"get"};
         var normalizedMenuItem = req.params.menuitem;
         var menuItemID = req.params.menuitemid;
 
+        if (!(normalizedMenuItem || menuItemID )) {
+            res.send(utility.formatErrorResponse(API));
+            return;
+        }
         connection.acquire(function (err, con) {
             if (menuItemID) {
                 sql = `select id,menu_id,portion_size,name, price,normalized_name,vegetarian 
                      from menu_items where id = ? LIMIT 1`
                 sql = SqlString.format(sql, [menuItemID]);
             } else {
-                normalizedMenuItem = normalizedMenuItem.toLowerCase().replace(/\s/g,'');
+                normalizedMenuItem = utility.normalize(normalizedMenuItem);
                 sql = "select id,menu_id,portion_size,name, price,normalized_name,vegetarian from menu_items where id in  ( \
                     select id from menu_items where normalized_name = ? \
                        union select menuitem_id from phrase_to_menuitems where \

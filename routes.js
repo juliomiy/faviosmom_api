@@ -11,8 +11,20 @@ module.exports = {
       menu.get(req, res);
     });
 
+    app.post('/v1/menu/', function(req, res) {
+      menu.insertMenu(req.body, res);
+    });
+
+    app.put('/v1/menu/', function(req, res) {
+      menu.updateMenu(req, res);
+    });
+
+    app.delete('/v1/menu/', function(req, res) {
+      menu.deleteMenu(req.body, res);
+    });
+
     app.get('/v1/menuitems/:category?', function(req, res) {
-          menuItem.get(req, res);
+      menuItem.get(req, res);
     });
 
 
