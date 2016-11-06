@@ -10,8 +10,22 @@ var SqlString = require("sqlstring");
 
 function Business_Detail() {
     this.get = function (req, res) {
-
+        var sql;
+        var response = {};
+        var API = {"name": "businessdetail",
+            "type": "get"
+        };
+        sql = "select location,closed_days,open_hours,current_location from business_detail";
+        sql = SqlString.format(sql);
+        connection.acquire(function (err, con) {
+            con.query(sql, function (err, result) {
+                con.release();
+                response = utility.formatSqlResponse(API,err,result);
+                res.send(response);
+            });
+        });
     }
+
     this.location = function(req, res) {
         var response = {
             'statuscode': 200,

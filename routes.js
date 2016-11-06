@@ -23,6 +23,10 @@ module.exports = {
       menu.deleteMenu(req.body, res);
     });
 
+    app.get('/v1/menuitems/alexa/', function (req,res) {
+          menuItem.getAlexaMenuItemsNames(req,res);;
+    });
+
     app.get('/v1/menuitems/:category?', function(req, res) {
       menuItem.get(req, res);
     });
@@ -50,7 +54,7 @@ module.exports = {
    });
 
    app.get('/v1/businessdetail/', function(req,res) {
-          businessDetail.location(req,res);
+          businessDetail.get(req,res);
     });
 
     app.post('/v1/order/', function (req, res) {

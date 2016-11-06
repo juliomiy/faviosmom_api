@@ -63,6 +63,30 @@ function MenuItems() {
     }
 
     this.updateMenuItem = function(req,res) {
+        var sql;
+        var API = {"name":"menuitems", "type":"put"};
+        var menuItem = req['menuitem'];
+        var response = {};
+        if (!menuItem) {
+            res.send(utility.formatErrorResponse(API));
+            return;
+        }
+        var menuID = menuItem.menuid;
+        var portionSize = menuItem.portionsize;
+        var name = menuItem.name;
+        var available = menuItem.available;
+        var menuItemID = menuItem.menuitemid ;
+        var price = menuItem.price;
+
+        connection.acquire(function (err, con) {
+            sql = "update menu_items set menu_id = ?, price = ?,portion_size = ?, name = ?, normalized_name = ?, available = ? where id = ? ";;
+            sql = SqlString.format(sql,[menuID,price,portionSize,name,utility.normalize(name),available,menuItemID]);
+            con.query(sql, function (err, result) {
+                con.release();
+                response = utility.formatSqlResponse(API,err,result);
+                res.send(response);
+            });
+        });
 
     }
 
@@ -71,7 +95,7 @@ function MenuItems() {
         var API = {"name":"menuitems", "type":"delete"};
         var menuItemID = req['menuitemid'];
         var response = {};
-        if (!menuItemID) {
+            if (!menuItemID) {
             res.send(utility.formatErrorResponse(API));
             return;
         }
@@ -145,6 +169,20 @@ function MenuItems() {
             });
         });
     };
+
+    this.getAlexaMenuItemsNames = function (req,res) {
+        var sql;
+        var API = {"name":"menuitem_alexa", "type":"get"};
+        var response = {};
+        connection.acquire(function (err, con) {
+            sql = "select name from menu_items order by name desc";
+            con.query(sql, function (err, result) {
+               con.release();
+               response = utility.formatSqlResponse(API,err,result);
+               res.send(response);
+            });
+        });
+    }
 }
 
 
