@@ -53,7 +53,7 @@ module.exports = {
 
    });
 
-   app.get('/v1/businessdetail/', function(req,res) {
+   app.get('/v1/businessdetail/:detailtype?', function(req,res) {
           businessDetail.get(req,res);
     });
 
