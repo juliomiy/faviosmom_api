@@ -3,10 +3,15 @@
 var menuItem = require('./models/menu_item');
 var menu = require('./models/menu');
 var order = require('./models/order');
+var contact = require('./models/contact');
 var businessDetail = require('./models/business_detail');
 
 module.exports = {
-  configure: function(app) {
+  configure: function(app)   {
+    app.post('/v1/contact/', function (req,res) {
+        contact.insertContact(req,res);
+    })
+
     app.get('/v1/menu/:type?', function(req, res) {
       menu.get(req, res);
     });
