@@ -5,6 +5,7 @@ var menu = require('./models/menu');
 var order = require('./models/order');
 var contact = require('./models/contact');
 var businessDetail = require('./models/business_detail');
+var shoppingCart = require('./models/shopping_cart');
 
 module.exports = {
   configure: function(app)   {
@@ -63,9 +64,14 @@ module.exports = {
     });
 
     app.post('/v1/order/', function (req, res) {
-      console.log(req.toString());
-      order.post(req.body, res);
+          order.post(req.body, res);
     });
+
+    app.get('/v1/shopping_cart/:sessionid(\\d+)',function (req,res) {
+          shoppingCart.get(req,res);
+    });
+
+
 
 //    app.get('/menuitems/', function(req, res) {
 //      menuItem.get(req, res);
