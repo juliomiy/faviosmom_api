@@ -63,6 +63,30 @@ function MenuItems() {
     }
 
     this.updateMenuItem = function(req,res) {
+        var sql;
+        var API = {"name":"menuitems", "type":"put"};
+        var menuItem = req['menuitem'];
+        var response = {};
+        if (!menuItem) {
+            res.send(utility.formatErrorResponse(API));
+            return;
+        }
+        var menuID = menuItem.menuid;
+        var portionSize = menuItem.portionsize;
+        var name = menuItem.name;
+        var available = menuItem.available;
+        var menuItemID = menuItem.menuitemid ;
+        var price = menuItem.price;
+
+        connection.acquire(function (err, con) {
+            sql = "update menu_items set menu_id = ?, price = ?,portion_size = ?, name = ?, normalized_name = ?, available = ? where id = ? ";;
+            sql = SqlString.format(sql,[menuID,price,portionSize,name,utility.normalize(name),available,menuItemID]);
+            con.query(sql, function (err, result) {
+                con.release();
+                response = utility.formatSqlResponse(API,err,result);
+                res.send(response);
+            });
+        });
 
     }
 
@@ -71,7 +95,7 @@ function MenuItems() {
         var API = {"name":"menuitems", "type":"delete"};
         var menuItemID = req['menuitemid'];
         var response = {};
-        if (!menuItemID) {
+            if (!menuItemID) {
             res.send(utility.formatErrorResponse(API));
             return;
         }
@@ -98,16 +122,21 @@ function MenuItems() {
      */
     this.getMenuItem = function(req,res) {
         var sql;
+        var API = {"name":"menuitem", "type":"get"};
         var normalizedMenuItem = req.params.menuitem;
         var menuItemID = req.params.menuitemid;
 
+        if (!(normalizedMenuItem || menuItemID )) {
+            res.send(utility.formatErrorResponse(API));
+            return;
+        }
         connection.acquire(function (err, con) {
             if (menuItemID) {
                 sql = `select id,menu_id,portion_size,name, price,normalized_name,vegetarian 
                      from menu_items where id = ? LIMIT 1`
                 sql = SqlString.format(sql, [menuItemID]);
             } else {
-                normalizedMenuItem = normalizedMenuItem.toLowerCase().replace(/\s/g,'');
+                normalizedMenuItem = utility.normalize(normalizedMenuItem);
                 sql = "select id,menu_id,portion_size,name, price,normalized_name,vegetarian from menu_items where id in  ( \
                     select id from menu_items where normalized_name = ? \
                        union select menuitem_id from phrase_to_menuitems where \
@@ -140,6 +169,20 @@ function MenuItems() {
             });
         });
     };
+
+    this.getAlexaMenuItemsNames = function (req,res) {
+        var sql;
+        var API = {"name":"menuitem_alexa", "type":"get"};
+        var response = {};
+        connection.acquire(function (err, con) {
+            sql = "select name from menu_items order by name desc";
+            con.query(sql, function (err, result) {
+               con.release();
+               response = utility.formatSqlResponse(API,err,result);
+               res.send(response);
+            });
+        });
+    }
 }
 
 
