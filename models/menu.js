@@ -15,9 +15,9 @@ function Menu() {
         var type = req.params.type;
 
         if (type) {
-            sql = SqlString.format('select mi.id, mi.name, mi.normalized_name from menu_items mi where  id in (select menuitem_id from type_to_menuitems where type = ? and available = 1)',[type]);
+            sql = SqlString.format('select mi.id, mi.one_liner,mi.short_description,mi.name, mi.normalized_name from menu_items mi where  id in (select menuitem_id from type_to_menuitems where type = ? and available = 1)',[type]);
         } else {
-            sql = SqlString.format('select id,short_description,name,normalized_name from menu where available=1');
+            sql = SqlString.format('select id,one_liner,short_description,name,normalized_name from menu where available=1');
         }
 
         connection.acquire(function (err, con) {
