@@ -5,6 +5,10 @@ var connection = require("../connection");
 var utility = require("../utility");
 var SqlString = require("sqlstring");
 
+/**
+ * @author juliomiyares@mac.com (Julio Hernandez-Miyares)
+ * Menu data object that operates on the menu table
+ */
 function Menu() {
     this.get = function (req, res) {
         var sql;
@@ -14,13 +18,15 @@ function Menu() {
         };
         var type = req.params.type;
 
+        /* type can be a category or empty. If empty, responds with all of the menu items that are available */
         if (type) {
-            sql = SqlString.format('select mi.id, mi.name, mi.normalized_name from menu_items mi where  id in (select menuitem_id from type_to_menuitems where type = ? and available = 1)',[type]);
+            sql = SqlString.format('select mi.id, mi.name, mi.normalized_name, mi.one_liner, mi.short_description from menu_items mi where  id in (select menuitem_id from type_to_menuitems where type = ? and available = 1)',[type]);
         } else {
-            sql = SqlString.format('select id,short_description,name,normalized_name from menu where available=1');
+            sql = SqlString.format('select id,name,normalized_name,one_liner,short_description from menu where available=1');
         }
 
         connection.acquire(function (err, con) {
+            if (err) throw err;
             con.query(sql, function (err, result) {
                 con.release();
                 response = utility.formatSqlResponse(API,err,result);

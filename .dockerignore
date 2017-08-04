@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+*.log
+*.sql
+.git
+.gitignore
+.idea
+Dockerfile
+.dockerignore
+
+
+
+
+

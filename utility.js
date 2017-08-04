@@ -1,9 +1,30 @@
 /**
- * Created by juliomiyares on 10/25/16.
+ *  @author juliomiyares@mac.com (Julio Hernandez-Miyares) 10/25/16.
  */
 'use strict';
 module.change_code = 1;
+
+var config = require('config').get('Faviosmom');
+var logLevel =  config.get('webConfig.logLevel') !== undefined ? config.get('webConfig.logLevel') : "info";
+var logDirectory = config.get('webConfig.logDirectory') !== undefined ? config.get('webConfig.logDirectory') : "logs/";
 var winston = require('winston');
+
+var logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.File)({
+            name: 'info-file',
+            filename: logDirectory + 'faviosmom-api-new.log',
+            level: 'info'
+        }),
+        new (winston.transports.File)({
+            name: 'error-file',
+            filename: logDirectory + 'faviosmom-api-error.log',
+            level: 'error'
+        })
+    ]
+});
+
+/*
 winston.add(
     winston.transports.File, {
         filename: 'faviosmom-api.log',
@@ -13,9 +34,11 @@ winston.add(
         timestamp: true
     }
 )
+*/
 function Utility() {
       this.log = function(log_level, section, key_value) {
-           winston.log(log_level,section,key_value);
+           logger.log(log_level,section,key_value);
+           //winston.log(log_level,section,key_value);
       }
 
       this.formatSqlResponse = function(api,err,result) {
@@ -47,7 +70,8 @@ function Utility() {
           } else {
               response['statuscode'] = 500;
               response['result'] = err;
-          }console.log(response);
+          }
+          this.log('info','',response);
           return response;
       }
       this.formatErrorResponse = function(API) {
@@ -63,6 +87,5 @@ function Utility() {
           return str.replace(/[\W_+\d]/g, "");
       }
 }
-
 
 module.exports = new Utility();

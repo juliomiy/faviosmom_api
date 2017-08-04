@@ -3,13 +3,14 @@
     "dbConfig": {
       "host": "146.148.100.114",
       "port": 3306,
-      "dbName": "faviosmom",
+      "dbName": "faviosmom_new",
       "user": "root",
       "password": "Yankees5a",
       "connectionLimit": 100
     },
     "webConfig": {
-       "port": "8001"
+       "port": "8001",
+       "logLevel": "debug"
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "Faviosmom": {
     "dbConfig": {
-      "host": "146.148.100.114",
+      "host": "docker_mysql",
       "port": 3306,
       "dbName": "faviosmom",
       "user": "root",
@@ -9,8 +9,9 @@
       "connectionLimit": 100
     },
     "webConfig": {
-      "port": "8000",
-      "logLevel": "debug"
+       "port": "8000",
+       "logLevel": "debug",
+       "logDirectory": "/usr/logs/"
     }
   }
 }
