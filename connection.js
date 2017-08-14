@@ -8,6 +8,7 @@ function Connection() {
   this.dbName = config.get('dbConfig.dbName');
   this.password = config.get('dbConfig.password');
   this.connectionLimit = config.get('dbConfig.connectionLimit');
+  console.log('DB Host: ' + config.get('dbConfig.host') + ' UserID: ' + this.user + ' dbName: ' + this.dbName);
 
   this.init = function() {
     this.pool = mysql.createPool({

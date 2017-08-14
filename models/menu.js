@@ -35,6 +35,16 @@ function Menu() {
         });
     }
     this.updateMenu = function (req,res) {
+        var sql;
+        var response = {};
+        var API = {"name": "menu",
+            "type": "put"
+        };
+        var menu = req['menu'];
+        if (!menu) {
+            res.send(utility.formatErrorResponse(API));
+            return;
+        }
 
     }
 
@@ -53,12 +63,13 @@ function Menu() {
 
         var name = menu.name;
         var normalized_name = utility.normalize(name);
+        var one_liner = menu.one_liner;
         var short_description = menu.short_description;
         var long_description = menu.long_description;
-        var available = menu.available;
+        var available = menu.available || 0;   //default to False if empty,null
 
-        sql = "insert into menu (name,normalized_name,available,short_description,long_description) values (?,?,?,?,?)";
-        sql = SqlString.format(sql,[name,normalized_name,available,short_description,long_description]);
+        sql = "insert into menu (name,normalized_name,available,one_liner,short_description,long_description) values (?,?,?,?,?,?)";
+        sql = SqlString.format(sql,[name,normalized_name,available,one_liner,short_description,long_description]);
 
         connection.acquire(function (err, con) {
             con.query(sql, function (err, result) {
@@ -69,6 +80,9 @@ function Menu() {
         });
     }
 
+    /*
+      @todo check for foreign key dependencies before trying to delete
+     */
     this.deleteMenu = function (req,res) {
         var sql;
         var response = {};
